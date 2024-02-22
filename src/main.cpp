@@ -1,4 +1,5 @@
 ﻿#include <SFML/Graphics.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 #include <fstream>
 #include <iostream>
@@ -28,7 +29,7 @@ int main()
     text.setFillColor(sf::Color(0xFF,0xFF,0xFF));
     
     
-    
+    bool save = false;
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -39,7 +40,15 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
+            if (event.type == sf::Event::KeyPressed && event.type == sf::Event::KeyReleased){
+                if(event.key.control == true && event.key.code == sf::Keyboard::S) {
+                    save = true;
+                    std::cout << "ctrl + s\n";
+                }
+            }
+
             if (event.type == sf::Event::KeyPressed) {
+                
                 std::cout << "Key pressed with code: " << event.key.code << "\n";
                 switch (event.key.code) {
                     case sf::Keyboard::Escape:
@@ -317,9 +326,11 @@ int main()
         }
         text.setString(finalRender);
         window.draw(text);
-        // std::ifstream text("sample.txt");
-        // std::ofstream file("test.txt");           
-        // file.write(finalRender.c_str(),finalRender.size());
+
+        if (save) {
+            std::ofstream file("test.txt");           
+            file.write(finalRender.c_str(),finalRender.size());
+        }
 
         window.display();
     }
